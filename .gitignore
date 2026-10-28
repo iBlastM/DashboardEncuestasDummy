@@ -1,0 +1,46 @@
+# --- Sistema operativo ---
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# --- Editores / IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- Python (scripts/build_*.py) ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# --- Node (por si se instala algo para pruebas) ---
+node_modules/
+npm-debug.log*
+
+# --- Secretos y configuracion local ---
+.env
+.env.*
+*.pem
+*.key
+
+# --- Archivos temporales de Excel / Office ---
+~$*
+*.tmp
+
+# --- Herramientas de pruebas y diseno (no se publican) ---
+.playwright-mcp/
+.impeccable/
+.tmp/
+
+# --- Capturas y salidas temporales de revision ---
+/*.png
+/*.jpg
+/*.log
+
+# NO ignorar (necesarios para que el sitio funcione en GitHub Pages):
+#   index.html, css/, js/ (incluye data.js, geo.js, icons.js), fonts/, imagenes/, vendor/
