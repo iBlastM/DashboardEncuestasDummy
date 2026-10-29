@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Metrix | Encuestas Querétaro</title>
+  <meta name="description" content="Tablero de la base de encuestas de Querétaro: aprobación de gobierno, agenda ciudadana, análisis territorial y comparativo por distrito.">
+  <link rel="icon" href="imagenes/favicon.png">
+  <link rel="stylesheet" href="css/fonts.css?v=7">
+  <link rel="stylesheet" href="css/styles.css?v=7">
+  <link rel="stylesheet" href="css/boards.css?v=7">
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="stripe" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="topbar-inner">
+      <div class="brand">
+        <a class="brand-home" href="index.html" title="Volver al inicio"><img src="imagenes/logo.png" alt="Metrix, inicio" width="86" height="30"></a>
+        <span class="brand-sep" aria-hidden="true"></span>
+        <details class="switch">
+          <summary><span class="brand-name">Encuesta ciudadana</span><svg class="icon"><use href="#i-caret-down"/></svg></summary>
+          <nav class="switch-menu" aria-label="Cambiar de tablero">
+            <a href="index.html"><svg class="icon"><use href="#i-house-simple"/></svg>Inicio</a>
+            <a href="encuesta.html" aria-current="page"><svg class="icon"><use href="#i-gauge"/></svg>Encuesta ciudadana</a>
+            <a href="gestiones.html"><svg class="icon"><use href="#i-clipboard-text"/></svg>Gestiones</a>
+            <a href="propaganda.html"><svg class="icon"><use href="#i-megaphone"/></svg>Publicidad</a>
+          </nav>
+        </details>
+        <span class="tag" title="Los datos son de prueba">Base de prueba · oct 2026</span>
+      </div>
+
+      <nav class="tabs" role="tablist" aria-label="Secciones del tablero">
+        <button class="tab" role="tab" id="tab-aprobacion" data-view="aprobacion" aria-controls="view-aprobacion" aria-selected="true">
+          <svg class="icon"><use href="#i-gauge"/></svg>Aprobación
+        </button>
+        <button class="tab" role="tab" id="tab-agenda" data-view="agenda" aria-controls="view-agenda" aria-selected="false" tabindex="-1">
+          <svg class="icon"><use href="#i-list-checks"/></svg>Agenda ciudadana
+        </button>
+        <button class="tab" role="tab" id="tab-territorio" data-view="territorio" aria-controls="view-territorio" aria-selected="false" tabindex="-1">
+          <svg class="icon"><use href="#i-map-pin-area"/></svg>Territorio
+        </button>
+        <button class="tab" role="tab" id="tab-distritos" data-view="distritos" aria-controls="view-distritos" aria-selected="false" tabindex="-1">
+          <svg class="icon"><use href="#i-users-three"/></svg>Distritos
+        </button>
+        <span class="tab-ind" id="tab-ind" aria-hidden="true"></span>
+      </nav>
+
+      <div class="topbar-actions">
+        <button class="btn only-narrow" id="toggle-rail" type="button" aria-expanded="false" aria-controls="rail">
+          <svg class="icon"><use href="#i-sliders-horizontal"/></svg><span class="btn-label">Filtros</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <aside class="rail" id="rail" aria-label="Segmentación de la muestra">
+    <div class="rail-head">
+      <h2>Segmentar muestra</h2>
+      <button class="btn btn-quiet" id="reset" type="button" disabled>
+        <svg class="icon"><use href="#i-arrow-counter-clockwise"/></svg>Limpiar
+      </button>
+    </div>
+
+    <fieldset id="f-distrito"><legend>Distrito</legend><div class="opts"></div></fieldset>
+    <fieldset id="f-animo"><legend>Estado de ánimo del ciudadano</legend><div class="opts"></div></fieldset>
+    <fieldset id="f-lugar"><legend>Lugar de la entrevista</legend><div class="opts"></div></fieldset>
+
+    <section class="sample" aria-live="polite">
+      <p class="sample-title">Muestra en pantalla</p>
+      <p class="sample-n" id="n-cur">0</p>
+      <p class="sample-of" id="n-of"></p>
+      <div class="sample-bar" aria-hidden="true"><i id="n-bar"></i></div>
+    </section>
+  </aside>
+
+  <main class="main" id="main">
+    <div class="main-inner">
+
+      <div class="page-head">
+        <h1 id="page-title"></h1>
+        <p id="page-desc"></p>
+        <p class="n-line" id="n-line" aria-hidden="true"></p>
+      </div>
+
+      <div class="chips" id="chips" hidden></div>
+      <div class="notice" id="notice" hidden>
+        <svg class="icon"><use href="#i-info"/></svg><span id="notice-text"></span>
+      </div>
+
+      <div class="empty" id="empty" hidden>
+        <h2>Ninguna entrevista cumple estos filtros</h2>
+        <p>La combinación elegida no tiene registros en la base. Quita algún filtro para volver a ver resultados.</p>
+        <button class="btn btn-primary" type="button" data-action="reset">Limpiar filtros</button>
+      </div>
+
+      <!-- Aprobación -->
+      <section class="view" id="view-aprobacion" role="tabpanel" aria-labelledby="tab-aprobacion">
+        <div class="grid" id="kpis"></div>
+
+        <div class="grid">
+          <article class="card span-7">
+            <div class="card-head">
+              <div>
+                <h2>Cómo se reparten las calificaciones</h2>
+                <p>Porcentaje de entrevistados que dio cada calificación del 1 al 10.</p>
+              </div>
+              <div class="legend" id="lg-dist"></div>
+            </div>
+            <div class="plot" id="plot-dist"></div>
+          </article>
+
+          <article class="card span-5">
+            <div class="card-head">
+              <div>
+                <h2>Promedio por distrito</h2>
+                <p>Pasa el cursor sobre un distrito para ver los tres promedios. Haz clic para filtrarlo.</p>
+              </div>
+              <div class="legend" id="lg-dots"></div>
+            </div>
+            <div class="plot" id="plot-dots"></div>
+          </article>
+        </div>
+
+        <div class="grid">
+          <article class="card span-7">
+            <div class="card-head">
+              <div>
+                <h2>Calificación según el ánimo</h2>
+                <p id="insight-animo"></p>
+              </div>
+              <div class="legend" id="lg-animo"></div>
+            </div>
+            <div class="plot short" id="plot-animo"></div>
+          </article>
+
+          <article class="card span-5">
+            <div class="card-head">
+              <div>
+                <h2>Calificación según el lugar</h2>
+                <p id="insight-lugar"></p>
+              </div>
+              <div class="legend" id="lg-lugar"></div>
+            </div>
+            <div class="plot short" id="plot-lugar"></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Agenda ciudadana -->
+      <section class="view" id="view-agenda" role="tabpanel" aria-labelledby="tab-agenda" hidden>
+        <div class="grid">
+          <article class="card span-4">
+            <div class="card-head"><div><h2>Problemática a resolver</h2><p id="top-problema"></p></div></div>
+            <ul class="rank" id="rank-problema"></ul>
+          </article>
+          <article class="card span-4">
+            <div class="card-head"><div><h2>Mayor preocupación</h2><p id="top-preocupacion"></p></div></div>
+            <ul class="rank" id="rank-preocupacion"></ul>
+          </article>
+          <article class="card span-4">
+            <div class="card-head"><div><h2>Lo que más gusta de vivir en Querétaro</h2><p id="top-gusta"></p></div></div>
+            <ul class="rank" id="rank-gusta"></ul>
+          </article>
+        </div>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h2>Qué responde cada distrito</h2>
+              <p id="heat-sub"></p>
+            </div>
+            <div class="seg" role="group" aria-label="Pregunta a comparar" id="heat-seg">
+              <button type="button" data-dim="preocupacion" aria-pressed="true">Preocupación</button>
+              <button type="button" data-dim="problema" aria-pressed="false">Problemática</button>
+              <button type="button" data-dim="gusta" aria-pressed="false">Lo que gusta</button>
+            </div>
+          </div>
+          <div class="table-wrap"><table class="heat" id="heat"></table></div>
+          <p class="heat-note">Cada fila suma 100%. El contorno verde marca la respuesta más mencionada de cada distrito.</p>
+        </article>
+      </section>
+
+      <!-- Territorio -->
+      <section class="view" id="view-territorio" role="tabpanel" aria-labelledby="tab-territorio" hidden>
+        <div class="grid">
+          <article class="card span-5 map-card">
+            <div class="card-head">
+              <div>
+                <h2>Mapa por distrito</h2>
+                <p>Haz clic en un distrito para filtrarlo.</p>
+              </div>
+            </div>
+            <div class="field">
+              <label for="map-metric">Colorear por</label>
+              <div class="select">
+                <select id="map-metric">
+                  <option value="kuri">Calificación de Mauricio Kuri</option>
+                  <option value="muni">Calificación del gobierno municipal</option>
+                  <option value="estatal">Calificación del gobierno estatal</option>
+                  <option value="aprK">Aprueba a Kuri (6 o más)</option>
+                  <option value="feliz">Ciudadanos felices</option>
+                  <option value="n">Entrevistas levantadas</option>
+                </select>
+                <svg class="icon"><use href="#i-caret-down"/></svg>
+              </div>
+            </div>
+            <div class="map-wrap">
+              <svg id="map" class="map" role="group" aria-label="Mapa de los siete distritos"></svg>
+            </div>
+            <div class="map-legend" aria-hidden="true">
+              <span id="ml-min"></span><i class="ramp"></i><span id="ml-max"></span>
+            </div>
+            <p class="map-note">Se asume que Distrito I a VII son los distritos locales 1 a 7 de Querétaro. Colores ajustados al rango actual de valores.</p>
+          </article>
+
+          <div class="col span-7">
+            <article class="card">
+              <div class="card-head">
+                <div>
+                  <h2 id="terr-rank-title">Ranking de distritos</h2>
+                  <p id="terr-rank-sub"></p>
+                </div>
+              </div>
+              <ul class="rank" id="rank-terr"></ul>
+            </article>
+
+            <article class="card">
+              <div class="card-head"><div><h2>Lectura del territorio</h2></div></div>
+              <ul class="notes" id="terr-notes"></ul>
+            </article>
+
+            <article class="card">
+              <div class="card-head">
+                <div>
+                  <h2>Cobertura geográfica</h2>
+                  <p>Secciones electorales que forman cada distrito, según el GeoJSON.</p>
+                </div>
+              </div>
+              <ul class="cover" id="cover"></ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Distritos -->
+      <section class="view" id="view-distritos" role="tabpanel" aria-labelledby="tab-distritos" hidden>
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h2>Comparativo de distritos</h2>
+              <p>Ordena por cualquier columna. Haz clic en una fila para filtrar ese distrito.</p>
+            </div>
+            <div class="legend" id="lg-mood">
+              <span><i class="sw" style="--c:var(--green)"></i>Feliz</span>
+              <span><i class="sw" style="--c:var(--mid)"></i>Regular</span>
+              <span><i class="sw" style="--c:var(--bad)"></i>Triste</span>
+            </div>
+          </div>
+          <div class="table-wrap"><table id="tbl-dist"></table></div>
+        </article>
+      </section>
+
+      <footer class="foot">
+        <span>Aprobación: calificación de 6 o más en la escala del 1 al 10.</span>
+        <span>Fuente: <span id="src"></span></span>
+      </footer>
+    </div>
+  </main>
+</div>
+
+<div class="tip" id="tip" role="tooltip" aria-hidden="true"></div>
+
+<script src="js/icons.js?v=7"></script>
+<script src="vendor/plotly-cartesian.min.js"></script>
+<script src="js/data.js?v=7"></script>
+<script src="js/geo.js?v=7"></script>
+<script src="js/nav.js?v=7"></script>
+<script src="js/encuesta.js?v=7"></script>
+</body>
+</html>
+
+
+
+

@@ -5,7 +5,6 @@ desktop.ini
 ehthumbs.db
 
 # --- Editores / IDE ---
-.vscode/
 .idea/
 *.swp
 *.swo
@@ -44,3 +43,7 @@ npm-debug.log*
 
 # NO ignorar (necesarios para que el sitio funcione en GitHub Pages):
 #   index.html, css/, js/ (incluye data.js, geo.js, icons.js), fonts/, imagenes/, vendor/
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
+.gitignore
